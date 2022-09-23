@@ -1,24 +1,47 @@
 const START_POINT = 0;
-const END_POINT = 400;
-const WATER = 0;
+const END_POINT = 405;
 
-const ENEMY_START = -70;
-const ENEMY_END = 500;
+const ENEMY_START = -101;
+const ENEMY_END = 505;
 const ENEMY_SPEED_MIN = 100;
-const ENEMY_SPEED_MAX = 300;
-const ENEMY_ROW_1 = 63;
+const ENEMY_SPEED_MAX = 350;
+const ENEMY_ROW_1 = 65;
 const ENEMY_ROW_2 = 145;
 const ENEMY_ROW_3 = 230;
 
 const X_STEP = 100;
-const Y_STEP = 80;
+const Y_STEP = 83;
 
 const PLAYER_X_START = 200;
 const PLAYER_Y_START = 320;
-const PLAYER_HEIGHT = 60;
+const PLAYER_HEIGHT = 50;
 
-let winScope = 0;
-let loseScope = 0;
+let levelCount = 1;
+let winScore = 0;
+let loseScore = 0;
+
+const level = document.createElement("div");
+document.body.append(level);
+level.style.cssText = `
+font-size: 2rem;
+width: 505px;
+margin: 20px auto 5px;`;
+
+const score = document.createElement("div");
+document.body.append(score);
+score.style.cssText = `
+font-size: 1.5rem;
+letter-spacing: 3px;
+width: 505px;
+margin: 5px auto -30px;
+display: flex;
+justify-content: space-between;`;
+
+const updateScore = function (vins, looses, levelNum) {
+  level.innerHTML = `<span>Level ${levelNum}</span>`;
+  score.innerHTML = `<span style="color:green">PASSED: ${vins}</span><span style="color:red">FAILED: ${looses}</span>`;
+};
+updateScore(winScore, loseScore, levelCount);
 
 let Enemy = function (x, y, speed, player) {
   this.x = x;
@@ -45,7 +68,9 @@ Enemy.prototype.checkCollisions = function () {
   ) {
     this.player.x = PLAYER_X_START;
     this.player.y = PLAYER_Y_START;
-    loseScope++;
+    levelCount++;
+    loseScore++;
+    updateScore(winScore, loseScore, levelCount);
   }
 };
 
@@ -68,35 +93,47 @@ Player.prototype.render = function () {
   ctx.drawImage(Resources.get(this.player), this.x, this.y);
 };
 
+Player.prototype.reset = function () {
+  this.x = PLAYER_X_START;
+  this.y = PLAYER_Y_START;
+  console.log(`x = ${this.x} / y = ${this.y}`);
+};
+
 Player.prototype.handleInput = function (keyPress) {
   switch (keyPress) {
     case "left":
-      if (this.x !== START_POINT) {
+      if (this.x > START_POINT) {
         this.x -= X_STEP;
       }
       break;
     case "right":
-      if (this.x !== END_POINT) {
+      if (this.x < END_POINT - X_STEP) {
         this.x += X_STEP;
       }
       break;
     case "up":
-      if (this.y !== Y_STEP) {
+      if (this.y > START_POINT) {
         this.y -= Y_STEP;
-      } else {
-        alert(`Win: ${++winScope}  Lose: ${loseScope}`);
-        this.x = PLAYER_X_START;
-        this.y = PLAYER_Y_START;
+        console.log(this.y);
       }
       break;
     case "down":
-      if (this.y !== END_POINT) {
+      if (this.y < END_POINT - Y_STEP) {
         this.y += Y_STEP;
       }
       break;
     default:
       this.x = PLAYER_X_START;
       this.y = PLAYER_Y_START;
+  }
+  if (this.y < START_POINT) {
+    setTimeout(function () {
+      player.reset();
+    }, 150);
+    levelCount++;
+    winScore++;
+    updateScore(winScore, loseScore, levelCount);
+    return;
   }
 };
 
