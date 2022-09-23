@@ -1,19 +1,3 @@
-// Enemies our player must avoid
-// const CELL_WIDTH = 100;
-// const CELL_HEIGHT = 70;
-
-// const QUANTITY_OF_COLUMNS = 5;
-// const QUANTITY_OF_ROWS = 5;
-// const QUANTITY_OF_ROWS_WITH_BUGS = 3;
-
-// const GAME_FIELD_WIDTH = CELL_WIDTH * QUANTITY_OF_COLUMNS;
-// const GAME_FIELD_HEIGHT = CELL_HEIGHT * QUANTITY_OF_ROWS;
-
-// const PLAYER_START_POSITION = {
-// 	x: CELL_WIDTH *
-// 	y:
-// }
-
 const START_POINT = 0;
 const END_POINT = 400;
 const WATER = 0;
